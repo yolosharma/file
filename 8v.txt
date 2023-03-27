@@ -1,0 +1,153 @@
+8 v
+
+1.	Volume: The amount of data
+2.	Variety: Type of data
+3.	Velocity: How fast is new data being generated
+4.	Veracity: Data is uncertain i.e data is not clean. Therefore, we clean data by preprocessing and cleaning null values.
+5.	Value of data: whether you can make money out of it.
+6.	Visualisation: Make Sense Of Data At A Glance
+7.	Viscosity: whether you want to keep the data or get rid of it.
+8.	Virality : chance of data being viral
+
+Let's consider a case study of a retail company that sells clothing and accessories both online and in physical stores, and how they leverage the 5Vs of big data to improve their business.
+Volume: The retail company collects and processes a large volume of data from various sources such as customer details, transaction history, website clicks, and social media interactions. They have millions of customers globally who buy clothing and accessories both online and in physical stores. This huge volume of data is crucial for understanding customer behavior and preferences.
+Velocity: The company analyzes this customer data in real-time to personalize the shopping experience for each customer. They use algorithms to suggest products based on the customer's previous purchases and online behavior. They also monitor social media platforms to quickly respond to customer complaints and feedback. This velocity of data processing is essential for ensuring customer satisfaction and retention.
+Variety: The retail company offers a wide variety of products to cater to different customer preferences. They stock up on different sizes, colors, and styles of clothing and accessories. Additionally, they analyze customer data to identify the latest fashion trends and preferences. This variety of data helps the company in making informed decisions and adapting to changing market trends.
+Veracity: The retail company ensures the veracity of their data by regularly updating their data collection systems and training their employees on data entry procedures to reduce errors. They also use analytics tools to verify the accuracy of their data. This ensures that the company is making decisions based on reliable data, which leads to better outcomes.
+Value: The retail company uses customer data to improve their marketing and sales strategies. By analyzing customer data, they identify customer needs, preferences, and buying patterns. They use this information to create targeted marketing campaigns and personalized offers that are more likely to convert customers into sales. This has led to increased customer satisfaction and loyalty, resulting in higher profits. The value of data is realized by the company in the form of increased revenue and customer retention.
+In conclusion, the retail company case study exemplifies how the 5Vs of big data can be utilized to improve business operations and customer satisfaction. By leveraging the volume, velocity, variety, veracity, and value of their data, the company was able to make data-driven decisions that led to higher profits and customer loyalty.
+
+HDFS Architecture
+Individual files are broken into blocks of fixed size and are Stored across a cluster of nodes. The data is divded into small blocks(typically 256 mb blocks) and saved along with its 3 replica. Since the size of these files may exceed the storage capacity of a single machine, they are stored in a cluster among several machines. Multiple devices are used to store data, therefore, coordination among the hardwares is required. HDFS Architecture consists of a name node and a data node:
+Name Node: The name Node is the controller and manager of HDFS. It knows the status and the metadata of all the files in HDFS. Multiple clients can access this name node, but still, data is synchronised. Name node provides information about the free space available. There are two ways to backup Name node:
+1.	Name node High Availability: Here, one computer monitors the heartbeat of other computer. If the other computer fails, the backup computer will take its IP address and saves the file. These high-availability servers are very expensive.
+2.	Secondary name node : It is not the backup of name code, it is the helper of name code.
+It communicates with name node and takes snapshots of HDFS metadata. These snapshots help minimize downtime and loss of data.
+Data Node: The data node knows where actual data is stored and only about the data stored in it. It has two functions, which are to read and write. It will read data and send it to the client when retrieval is requested and will receive data and store it locally when storage is requested.
+
+HDFS Read
+When the client request to read the data node, name node first provides the information where data node is present. We can read multiple files at one time. If name node is not able to provide information about the data node, then it will redirect it to replica of that data node.
+
+HDFS Write
+Name node will provide the client with free space available to write. It will return as many free areas as there is the number of replica present. If there are 5 replicas available, first I’ll write on 1st data node and if successful it will connect to me 2nd data node and so on. Parallelism is not achievable here as it will create the arbitrary formation of replicas and the proper state of the file cannot be maintained.
+
+Map Reduce 
+MapReduce is a programming model used to perform distributed processing in parallel in a Hadoop cluster, which Makes Hadoop work so fast. When you are dealing with Big Data, serial processing is no more of any use. MapReduce has mainly two tasks which are divided phase-wise:
+•	Map Task
+•	Reduce Task
+Example: Suppose the Indian government has assigned you the task to count the population of India. Calculating the population of such a large country is not an easy task for a single person. One of the ways to solve this problem is to divide the country by states and assign individuals in charge to each state to count the population of that state.
+1.	Map Phase: The Phase where the individual in-charges are collecting the population of each house in their division is Map Phase.
+•	Mapper: Involved individual in-charge of calculating population
+•	Input Splits: The state or the division of the state
+•	Key-Value Pair: Output from each individual Mapper like the key is Rajasthan and value is 2
+2.	Reduce Phase: The Phase where you are aggregating your result
+•	Reducers: Individuals who are aggregating the actual result. Here in our example, the trained officers. Each Reducer produces the output as a key-value pair
+3.	Shuffle Phase: The Phase where the data is copied from Mappers to Reducers is Shuffler’s Phase. It comes in between Map and Reduces phase. Now the Map Phase, Reduce Phase, and Shuffler Phase our the three main Phases of our MapReduce.
+
+MRV1
+MRV1 (MapReduce Version 1) is the first version of MapReduce framework that was released as part of Hadoop.
+It basically has 5 parts- 
+a) The client who is the calling computer 
+b) the job tracker- Reducer
+c) Task tracker- Mapper
+d) MR tasks
+e) HDFs
+A Client invokes a Map Reduce, from a Calling Node. Job Tracker is created in the memory of the Calling Node. The Job Tracker queries the Name Node and finds the location of the Data Nodes. Job Tracker then launches Task Trackers in the memory of all the Data Nodes as above to run the jobs. Job Tracker gives the code to Task Tracker to run as a Task. Task Tracker is responsible for creating the tasks & running the tasks. The Mapper is found here. Once the Task is completed, the result from the Task is sent back to the Job Tracker. Job Tracker also keeps a track of progress by each Task Tracker. The Job Tracker also receives the results from each Task Tracker and aggregates the results. The Reducer is found here.
+
+MRV2
+Also known as YARN( Yet another Resource negotiator) is the second version of map reduce framework. 
+It has 7 parts-
+a) The client
+b) Resource manager
+c) App node manager
+d) Application master
+e) Task node manager
+f) MR Task
+g) HDFS
+A Client invokes a Map Reduce, from a Calling Node. Resource Manager is created in the memory of the Calling Node. The Resource Manager then launches containers with appropriate resources with App Node Manager in memory of the Calling Node. Application Master is in “pause” mode till all containers with Task Node Manager are created. The Resource Manager queries the Name Node and finds the Data Nodes. The Resource Manager then launches containers with appropriate resources with Task Node Manager in all the Data Nodes. Application Master gives the code to Task Node Manager to run as a Task. Task Node Manager is responsible for creating & running tasks. Mapper is here. Once the task is completed, the result from the task is sent back to the Application Master. Application Master also keeps a track of the progress of each Task Node Manager. The ApplicationMaster also receives the results from each Task Node Manager and aggregates the results. The Reducer of the Job is found here.
+Thus, from the previous version, Job Tracker has been replaced by Resource Manager & Application Master. From the previous version, Task Tracker has been replaced by Task Node Managers
+
+MAP REDUCE FAILURE RECOVERY
+MRv1
+•	If the task fails, a new task is started by the Task Tracker. If Task Tracker fails, a new task tracker is started by the job tracker but if the job tracker fails, there is no recovery of that.
+MRv2
+•	If a task fails, a new task is started by the task node manager. If the task node manager fails, new task node manager is created by Resource Manager. This Task Node Manager is given the code and started by Application Master. If the Application master fails, new Application Master is started by App Node Manager. If App node Manager fails, new app node manager is created by Resource Manager. If Resource Manager fails, new resource manager with saved state is starts next time.
+
+DIFFERENCE IN MRV1 AND MRV2
+• Fault-tolerance: MRv1 has limited fault-tolerance capabilities, where the failure of a single node can cause the entire job to fail. MRv2, on the other hand, has improved fault-tolerance capabilities, where the ApplicationMaster can detect and recover from failures.
+• Scalability: MRv1 is limited in terms of scalability as it has a fixed number of slots per node. On the other hand, MRv2 is more scalable as it allows for dynamic allocation of resources based on the workload.
+• Resource Manager: In MRv1, JobTracker acts as both the resource manager and the job scheduler, whereas in MRv2, the resource management and scheduling are separated out into two daemons: ResourceManager and ApplicationMaster.
+• Architecture: MRv1 follows a classic MapReduce architecture, where Map and Reduce tasks are tightly coupled and run within the same process. On the other hand, MRv2 (also known as YARN) separates the resource management and job scheduling functions from the MapReduce processing framework. This allows for more efficient use of cluster resources and better support for different types of processing frameworks.
+
+APACHE HIVE ARCHITECTURE
+Hive is a data warehouse system for Hadoop that provides a SQL-like interface for querying data stored in Hadoop. It is built on top of Hadoop Distributed File System (HDFS) and provides a high-level abstraction for data analysis. The key components of the Apache Hive architecture are:
+• Metastore: Hive's Metastore is a central repository that stores metadata information about tables, columns, partitions, etc. It maintains information about data schemas, data types, and the location of data stored in Hadoop. It also stores information about HiveQL statements, such as the user who executed the statement and the time of execution.
+• Driver: The Driver manages the lifecycle of a HiveQL statement as it moves through Hive. It receives HiveQL queries from users, validates them, and initiates the compilation process. It also communicates with the metastore to retrieve metadata about tables and columns.
+• Query Compiler: Hive's Query Compiler is responsible for compiling HiveQL statements into a series of MapReduce tasks. It generates an execution plan for the query based on the metadata information obtained from the Metastore. The compiler optimizes the execution plan by reordering tasks to reduce the number of MapReduce jobs required.
+• Execution Engine: The Execution Engine executes the tasks produced by the compiler in proper dependency order. It manages the execution of MapReduce jobs and ensures that they are executed in parallel as much as possible. The engine also handles the communication between the MapReduce jobs and the storage layer.
+• Interface: Hive provides a variety of interfaces for users to interact with the system. These interfaces include the Hive command-line interface (CLI), the Hive Web User Interface (Web UI), and a JDBC/ODBC interface that enables external applications to connect to Hive and execute HiveQL statements. The results of the query are displayed back to the user through the interface.
+Overall, Hive architecture comprises several components that work together to provide a SQL-like interface for querying data stored in Hadoop. It enables users to process large amounts of unstructured data using a familiar SQL-like syntax, making it an excellent tool for data warehousing and analysis.
+
+APACHE PIG
+Pig is a platform that provides a high-level language, Pig Latin, for expressing data analysis programs and an infrastructure for executing these programs. It is designed to handle large data sets and provides a simple and flexible way to process and analyze them. Here's a breakdown of Pig's architecture:
+• Pig Latin Language: Pig Latin is a high-level scripting language used to write data analysis programs. It has a similar syntax to SQL and can handle structured and unstructured data. The language includes operators to perform various transformations on data, such as filtering, sorting, and aggregating.
+• Pig Script Execution: Pig scripts are executed on a cluster of machines using MapReduce, which allows for distributed computing. The scripts are compiled into a series of MapReduce jobs that are submitted to the Hadoop cluster for processing.
+• Pig Execution Environment: The Pig execution environment includes the Pig Latin interpreter and the Pig runtime system, which is responsible for executing Pig scripts. The runtime system includes a number of components, including the Pig Server, the Pig Client, and the Pig Engine.
+• Hadoop Distributed File System: Pig works with data stored in Hadoop Distributed File System (HDFS), which is a distributed file system that can store large volumes of data across multiple nodes in a cluster.
+• Pig Runtime System: The Pig runtime system is responsible for executing Pig scripts. It includes the following components:
+                  • Pig Server: The Pig Server is the entry point for executing Pig scripts. It receives the scripts and manages their execution.
+                  • Pig Client: The Pig Client is a command-line interface used to submit Pig scripts to the Pig Server.
+                  • Pig Engine: The Pig Engine is responsible for compiling Pig scripts into a series of MapReduce jobs that can be executed on a Hadoop cluster.
+In summary, Pig is a data analysis platform that provides a high-level language for expressing data analysis programs and an infrastructure for executing these programs on a Hadoop cluster. Pig scripts are compiled into MapReduce jobs and executed on the Hadoop cluster, allowing for distributed computing and processing of large data sets.
+
+APACHE SPARK
+Apache Spark is an open-source cluster computing framework used for big data analytics. It is designed to be faster, easier to use, and more versatile than its predecessor, Hadoop MapReduce. Spark integrates with the Hadoop ecosystem and works on top of the Hadoop Distributed File System (HDFS).
+Spark allows users to write distributed programs in a fast and easy way, while still leveraging the power of Hadoop's distributed computing framework. It offers performance up to 10 times faster than Hadoop MapReduce for certain applications.
+Spark is designed to solve similar problems as Hadoop MapReduce, but with a fast in-memory approach. It can be used interactively to quickly process and query large datasets. Spark has built-in tools for interactive query analysis, large-scale graph processing, and real-time analysis.
+Spark revolves around the concept of a Resilient Distributed Dataset (RDD). RDD is a fault-tolerant collection of elements that can be operated on in parallel. RDDs can be created by either parallelizing an existing collection in the driver program or referencing a dataset in a shared filesystem like HDFS or a DBMS like HBase.
+The Spark architecture consists of several components, including the driver program, cluster manager, and worker nodes. The driver program is responsible for coordinating the distributed computation across the cluster. The cluster manager is responsible for managing the resources of the cluster and scheduling tasks. The worker nodes are responsible for executing the tasks assigned by the driver program.
+Spark has a rich set of APIs for data processing, including SQL, machine learning, graph processing, and streaming. These APIs can be used with various programming languages such as Java, Scala, Python, and R.
+In summary, Spark is a fast and versatile cluster computing framework that allows users to write distributed programs in a fast and easy way. It is designed to work with the Hadoop ecosystem and offers a variety of built-in tools for data processing. Spark's architecture is based on a master-slave cluster manager and revolves around the concept of RDDs.
+
+DIFFERENCES AND SIMILARITIES BETWEEN HADOOP AND SPARK
+Differences:
+•	Processing Model: Hadoop MapReduce processes data in batch mode while Spark processes data in-memory and can be used for both batch and stream processing.
+•	Speed: Spark is faster than Hadoop MapReduce for iterative processing and interactive queries due to its in-memory processing capability.
+•	Ease of Use: Spark provides a more user-friendly API and a simpler programming model than Hadoop MapReduce, which requires more low-level programming.
+•	Scalability: Both Hadoop and Spark are highly scalable, but Spark is more efficient in handling iterative and interactive tasks than Hadoop.
+•	Dependencies: Hadoop relies on several other tools such as Hive, Pig, and Mahout for performing advanced data analysis, while Spark has inbuilt libraries for interactive queries, machine learning, and graph processing.
+Similarities:
+•	Both are big data processing frameworks and can handle massive amounts of data.
+•	Both can process data stored in Hadoop Distributed File System (HDFS).
+•	Both support distributed processing across a cluster of commodity hardware.
+•	Both are open-source and have a large and active developer community.
+•	Both can run on-premises, in the cloud, or in a hybrid environment.
+•	Both Hadoop and Spark support fault-tolerance and data locality optimizations.
+
+SQOOP
+Sqoop is an open-source tool designed for transferring data between traditional relational databases and the Hadoop ecosystem. It enables the transfer of data from various relational databases like MySQL, PostgreSQL, Oracle, SQL Server, and DB2 into Hadoop Distributed File System (HDFS), HBase or Hive, and vice versa. Sqoop uses MapReduce to import and export data, which allows it to handle large data sets in parallel and distribute the workload across a cluster.
+The architecture of Sqoop involves the following components:
+• RDBMS: The traditional relational database management system stores the data which needs to be transferred.
+• Sqoop Client: It is a command-line interface used to interact with the Sqoop server. The Sqoop client requests for metadata information from the RDBMS.
+• Sqoop Server: It receives the metadata information from the RDBMS and uses it to generate Java classes and internal jar files.
+• MapReduce: Sqoop generates MapReduce jobs to import or export data from RDBMS to Hadoop and vice versa. It allows parallel processing of data and distributes the workload across the cluster.
+• Hadoop Ecosystem: Sqoop transfers data between Hadoop ecosystem components, such as HDFS, HBase, and Hive.
+The process of importing data using Sqoop involves the following steps:
+                 • Sqoop client requests metadata information from the RDBMS.
+                 • RDBMS returns the required metadata information.
+                 • Sqoop generates Java classes and internal jar files based on metadata information.
+                 • Sqoop generates the table structure and fetches data using MapReduce jobs.
+                 • Primary ID partitioning happens in the table as multiple mappers import or export data at the same time.
+                 • Data is imported into HDFS, HBase, or Hive.
+Similarly, the process of exporting data using Sqoop involves similar steps but in the reverse order.
+In summary, Sqoop is a tool used for efficient transfer of data between traditional RDBMS and Hadoop ecosystem. It uses MapReduce jobs to import and export data, and its architecture involves components like Sqoop client, server, RDBMS, MapReduce, and Hadoop ecosystem. Sqoop enables efficient handling of large data sets by distributing the workload across a cluster.
+
+
+COLUMNAR DATABASE
+A columnar database, also known as a column-oriented database, is a type of database management system (DBMS) that stores data in columns, rather than in rows like traditional relational databases (RDBMS). In a columnar database, data is stored contiguously on the disk, with subsequent column values stored together. Each cell value in the table has a timestamp and the tables are sorted by row. Rows are identified by a row-key. The main difference between a columnar database and an RDBMS is the way data is stored and accessed. In an RDBMS, data is stored in rows, with all of the data for each record stored together. This can be efficient for some types of queries, but it can be slow for queries that require aggregating data across multiple records. In a columnar database, data is stored in columns, with all of the data for each column stored together. This can be more efficient for queries that require aggregating data across multiple columns.
+Columnar databases can offer several advantages over RDBMS: 
+• Faster query performance: By storing data in columns, columnar databases can perform columnar operations like MIN, MAX, SUM, COUNT, and AVG very rapidly. This can speed up query response times for some types of queries.
+• Efficient storage: By storing data contiguously on disk, columnar databases can efficiently read and write data to and from hard disk storage. This can reduce storage requirements and speed up query response times.
+• Flexible schema: In a columnar database, the table schema defines only column families, which are key-value pairs. A table can have multiple column families, and each column family can have any number of columns. This can make it easier to modify the schema of a database as needed.
+• ACID compliance: Columnar databases can fulfill the ACID principles of a database, which are Atomicity, Consistency, Isolation, and Durability. These principles ensure that database transactions are processed reliably and can be important for applications where data integrity is a top priority.
+
